@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MiLupa</string>
+    <string name="Start">Iniciar</string>
+    <string name="SubirVolumen">Subir Volumen Acerca</string>
+    <string name="TocaPantallaFoto">Toca la pantalla para sacar foto</string>
+    <string name="BajarVolumenAleja">Bajar Volumen Aleja</string>
+    <string name="ImagenesGuardanPictures">Las Imagenes se guardan en la carpeta \'Pictures\'</string>
+    <string name="zoom">Subir Volumen para Acercar, Bajar Volumen para Alejar.</string>
+    <string name="appodeal_app_key">c22f42ed3ea907d8928fa5653d7b431d406cfce77cdc44d7</string>
+</resources>
