@@ -34,19 +34,18 @@
             android:value="@string/appodeal_app_key" />
 
         <activity android:name=".MainActivity"
+            android:exported="false">
+        </activity>
+        <activity android:name=".CamActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:screenOrientation="portrait"
+            android:largeHeap="true"
             android:exported="true">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
 
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
-        </activity>
-        <activity android:name=".CamActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:screenOrientation="portrait"
-            android:largeHeap="true"
-            android:exported="false">
-
         </activity>
         <activity android:name=".PrevActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"

@@ -5,6 +5,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -25,6 +28,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import android.text.Layout;
 import android.util.Log;
@@ -112,6 +116,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cam);
+        startNotification();
 
         // Initialize Appodeal
         String appodealAppKey = getString(R.string.appodeal_app_key);
@@ -147,16 +152,25 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
         imgFoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (safeToTakePicture) {
-                    mCamera.takePicture(null, null, CamActivity.this);
-                    safeToTakePicture = false;
+                if (mCamera == null || parameters == null) {
+                    return;
                 }
+                try {
+                    if (safeToTakePicture) {
+                        mCamera.takePicture(null, null, CamActivity.this);
+                        safeToTakePicture = false;
+                    }
 
-                if (isOn1 = true) {
-                    iBtnFlash.setImageResource(R.mipmap.flashwhite);
-                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                    mCamera.setParameters(parameters);
-                    isOn1 = false;
+                    if (isOn1) { // Turn off flash if it's on
+                        iBtnFlash.setImageResource(R.mipmap.flashwhite);
+                        parameters = mCamera.getParameters();
+                        parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                        mCamera.setParameters(parameters);
+                        isOn1 = false;
+                    }
+                } catch (Exception e) {
+                    Log.e("TakePictureError", "Error taking picture: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         });
@@ -164,19 +178,32 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
         imgZoomIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final int maxZoomLevel = parameters.getMaxZoom();
-                Log.i("max ZOOM ", "is " + maxZoomLevel);
-                if (currentZoomLevel < maxZoomLevel) {
-                    currentZoomLevel++;
-                    mCamera.startSmoothZoom(currentZoomLevel);
-                    parameters.setZoom(currentZoomLevel);
-                    mCamera.setParameters(parameters);
-                    mPreview.setFocusable(true);
-                    if (Build.VERSION.SDK_INT > 23) {
-                        mCamera.getParameters();
-                        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-                        mCamera.setParameters(parameters);
+                if (mCamera == null || parameters == null) {
+                    return;
+                }
+                try {
+                    parameters = mCamera.getParameters();
+                    if (!parameters.isZoomSupported()) {
+                        return;
                     }
+                    final int maxZoomLevel = parameters.getMaxZoom();
+                    Log.i("max ZOOM ", "is " + maxZoomLevel);
+                    if (currentZoomLevel < maxZoomLevel) {
+                        currentZoomLevel++;
+                        mCamera.stopPreview();
+                        parameters.setZoom(currentZoomLevel);
+                        mCamera.setParameters(parameters);
+                        mCamera.startPreview();
+                        mPreview.setFocusable(true);
+                        if (Build.VERSION.SDK_INT > 23) {
+                            parameters = mCamera.getParameters();
+                            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                            mCamera.setParameters(parameters);
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.e("ZoomInError", "Error zooming in: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         });
@@ -185,16 +212,27 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
         imgZoomOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currentZoomLevel > 0) {
-                    currentZoomLevel--;
-                    parameters.setZoom(currentZoomLevel);
-                    mCamera.setParameters(parameters);
-                    mPreview.setFocusable(true);
-                    if (Build.VERSION.SDK_INT > 23) {
-                        mCamera.getParameters();
-                        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                if (mCamera == null || parameters == null) {
+                    return;
+                }
+                try {
+                    if (currentZoomLevel > 0) {
+                        currentZoomLevel--;
+                        mCamera.stopPreview();
+                        parameters = mCamera.getParameters();
+                        parameters.setZoom(currentZoomLevel);
                         mCamera.setParameters(parameters);
+                        mCamera.startPreview();
+                        mPreview.setFocusable(true);
+                        if (Build.VERSION.SDK_INT > 23) {
+                            parameters = mCamera.getParameters();
+                            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                            mCamera.setParameters(parameters);
+                        }
                     }
+                } catch (Exception e) {
+                    Log.e("ZoomOutError", "Error zooming out: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         });
@@ -272,8 +310,9 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
                 mCamera.startPreview();
                 isOn1 = true;
             } else {
-                // iBtnFlash.setImageResource(R.mipmap.flashwhite); // TODO: Copy mipmap resources
+                iBtnFlash.setImageResource(R.mipmap.flashwhite);
                 Toast.makeText(getApplicationContext(), "Light Off", Toast.LENGTH_LONG).show();
+                parameters = mCamera.getParameters();
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                 if (Build.VERSION.SDK_INT > 23) {
                     mCamera.setParameters(parameters);
@@ -328,21 +367,36 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
 
     public void turnOn() {
         if (isFlash1 && mCamera != null) { // Added null check for mCamera
-            if (!isOn1) {
-                iBtnFlash.setImageResource(R.mipmap.flashoutwhite);
-                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-                mCamera.stopPreview(); // Stop preview before changing parameters
-                mCamera.setParameters(parameters);
-                mCamera.startPreview(); // Restart preview after applying parameters
-                isOn1 = true;
-            } else {
-                // iBtnFlash.setImageResource(R.mipmap.flashwhite); // TODO: Copy mipmap resources
-                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                mCamera.stopPreview(); // Stop preview
-                mCamera.setParameters(parameters);
-                mCamera.startPreview(); // Restart preview
-                isOn1 = false;
+            try {
+                if (!isOn1) {
+                    // Activate flash
+                    iBtnFlash.setImageResource(R.mipmap.flashoutwhite);
+                    iBtnFlash.refreshDrawableState();
+                    parameters = mCamera.getParameters();
+                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                    mCamera.stopPreview(); // Stop preview before changing parameters
+                    mCamera.setParameters(parameters);
+                    mCamera.startPreview(); // Restart preview after applying parameters
+                    isOn1 = true;
+                    Log.d("Flash", "Flash turned ON, icon changed to flashoutwhite, isOn1=" + isOn1);
+                } else {
+                    // Deactivate flash - return to original state
+                    iBtnFlash.setImageResource(R.mipmap.flashwhite);
+                    iBtnFlash.refreshDrawableState();
+                    parameters = mCamera.getParameters();
+                    parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                    mCamera.stopPreview(); // Stop preview
+                    mCamera.setParameters(parameters);
+                    mCamera.startPreview(); // Restart preview
+                    isOn1 = false;
+                    Log.d("Flash", "Flash turned OFF, icon changed to flashwhite, isOn1=" + isOn1);
+                }
+            } catch (Exception e) {
+                Log.e("FlashError", "Error toggling flash: " + e.getMessage());
+                e.printStackTrace();
             }
+        } else {
+            Log.w("Flash", "Cannot toggle flash: isFlash1=" + isFlash1 + ", mCamera=" + (mCamera != null));
         }
     }
 
@@ -396,7 +450,9 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
         }
 
         if (isOn1) { // Turn off flash if it's on
-            // iBtnFlash.setImageResource(R.mipmap.flashwhite); // TODO: Copy mipmap resources
+            iBtnFlash.setImageResource(R.mipmap.flashwhite);
+            iBtnFlash.refreshDrawableState();
+            parameters = mCamera.getParameters();
             parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
             mCamera.setParameters(parameters);
             isOn1 = false;
@@ -579,6 +635,25 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
             mCamera.release();
             mCamera = null;
         }
+    }
+
+    public void startNotification(){
+        Intent intent1 = new Intent(this, CamActivity.class);
+        PendingIntent pIntent1 = PendingIntent.getActivity(this, (int)
+                System.currentTimeMillis(), intent1, PendingIntent.FLAG_IMMUTABLE);
+
+        CharSequence titulo = getText(R.string.app_name);
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContentText(titulo)
+                .setSmallIcon(R.drawable.ic_noti)
+                .setContentIntent(pIntent1)
+                .setOngoing(false)
+                .build();
+
+        NotificationManager mNotificationManager = (NotificationManager)
+                getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.notify(33, notification);
     }
 
     @Override

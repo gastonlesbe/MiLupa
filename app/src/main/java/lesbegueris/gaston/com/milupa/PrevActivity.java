@@ -68,15 +68,10 @@ public class PrevActivity extends Activity {
         iBtnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Show interstitial ad when closing activity
-                AppodealHelper.showInterstitial(PrevActivity.this, new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent e = new Intent(PrevActivity.this, CamActivity.class);
-                        startActivity(e);
-                        finish();
-                    }
-                });
+                // Close activity and return to camera - banner ad is already visible
+                Intent e = new Intent(PrevActivity.this, CamActivity.class);
+                startActivity(e);
+                finish();
             }
         });
 
@@ -136,13 +131,8 @@ public class PrevActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        // Show interstitial ad when closing activity
-        AppodealHelper.showInterstitial(PrevActivity.this, new Runnable() {
-            @Override
-            public void run() {
-                PrevActivity.super.onBackPressed();
-            }
-        });
+        // Close activity - banner ad is already visible, no need for interstitial
+        super.onBackPressed();
     }
 }
 
