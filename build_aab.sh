@@ -11,11 +11,15 @@ if [ ! -f "keystore.properties" ]; then
     exit 1
 fi
 
-# Check if keystore file exists
-if [ ! -f "milupa.jks" ]; then
-    echo "ERROR: milupa.jks not found!"
-    echo "Please copy milupa.jks to the project root."
-    exit 1
+# Check if keystore file exists (read from keystore.properties)
+KEYSTORE_FILE=$(grep "^storeFile=" keystore.properties | cut -d'=' -f2 | sed 's|^/||')
+if [ -z "$KEYSTORE_FILE" ]; then
+    KEYSTORE_FILE=$(grep "^storeFile=" keystore.properties | cut -d'=' -f2)
+fi
+
+if [ ! -f "$KEYSTORE_FILE" ] && [ ! -f "$(basename "$KEYSTORE_FILE")" ]; then
+    echo "WARNING: Keystore file not found: $KEYSTORE_FILE"
+    echo "Please verify keystore.properties points to the correct keystore file."
 fi
 
 # Build the AAB

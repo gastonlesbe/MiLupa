@@ -1,0 +1,388 @@
+> Task :clean
+> Task :app:clean
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preReleaseBuild UP-TO-DATE
+> Task :app:processReleaseNavigationResources
+> Task :app:compileReleaseNavigationResources
+> Task :app:generateReleaseResValues
+> Task :app:mapReleaseSourceSetPaths
+> Task :app:generateReleaseResources
+> Task :app:createReleaseCompatibleScreenManifests
+> Task :app:extractDeepLinksRelease
+> Task :app:mergeReleaseResources
+
+> Task :app:processReleaseMainManifest
+package="lesbegueris.gaston.com.milupa" found in source AndroidManifest.xml: /home/gaston/StudioProjects/MiLupa/app/src/main/AndroidManifest.xml.
+Setting the namespace via the package attribute in the source AndroidManifest.xml is no longer supported, and the value is ignored.
+Recommendation: remove package="lesbegueris.gaston.com.milupa" from the source AndroidManifest.xml: /home/gaston/StudioProjects/MiLupa/app/src/main/AndroidManifest.xml.
+[com.pangle.global:pag-sdk:7.1.0.4] /home/gaston/.gradle/caches/8.13/transforms/05961b258a185bab5890770044107dfd/transformed/pag-sdk-7.1.0.4/AndroidManifest.xml Warning:
+	Namespace 'com.bytedance' is used in multiple modules and/or libraries: com.pangle.global:pag-sdk:7.1.0.4, com.pangle.global:pag-sdk-ad:unfat-7104-20250326173127. Please ensure that all modules and libraries have a unique namespace. For more information, See https://developer.android.com/studio/build/configure-app-module#set-namespace
+[androidx.test.espresso:espresso-core:3.1.0] /home/gaston/.gradle/caches/8.13/transforms/4e73b0cf1a6604a8bcff8e4d1f5fb15f/transformed/espresso-core-3.1.0/AndroidManifest.xml Warning:
+	Namespace 'androidx.test.espresso' is used in multiple modules and/or libraries: androidx.test.espresso:espresso-core:3.1.0, androidx.test.espresso:espresso-idling-resource:3.1.0. Please ensure that all modules and libraries have a unique namespace. For more information, See https://developer.android.com/studio/build/configure-app-module#set-namespace
+/home/gaston/StudioProjects/MiLupa/app/src/main/AndroidManifest.xml:8:5-81 Warning:
+	uses-permission#android.permission.WRITE_EXTERNAL_STORAGE was tagged at AndroidManifest.xml:8 to replace another declaration but no other declaration present
+/home/gaston/StudioProjects/MiLupa/app/src/main/AndroidManifest.xml Warning:
+	activity#io.bidmachine.rendering.ad.fullscreen.FullScreenActivity@android:hardwareAccelerated was tagged at AndroidManifest.xml:0 to replace other declarations but no other declaration present
+
+> Task :app:processReleaseManifest
+> Task :app:processApplicationManifestReleaseForBundle
+> Task :app:checkReleaseAarMetadata
+> Task :app:packageReleaseResources
+> Task :app:extractReleaseVersionControlInfo
+> Task :app:parseReleaseLocalResources
+> Task :app:javaPreCompileRelease
+> Task :app:desugarReleaseFileDependencies
+> Task :app:mergeReleaseStartupProfile UP-TO-DATE
+> Task :app:mergeReleaseShaders
+> Task :app:compileReleaseShaders NO-SOURCE
+> Task :app:processReleaseManifestForPackage
+> Task :app:checkReleaseDuplicateClasses
+> Task :app:generateReleaseAssets UP-TO-DATE
+> Task :app:mergeReleaseAssets
+> Task :app:processReleaseJavaRes NO-SOURCE
+> Task :app:mergeReleaseJniLibFolders
+> Task :app:writeReleaseAppMetadata
+> Task :app:mergeReleaseNativeLibs
+> Task :app:mergeReleaseArtProfile
+
+> Task :app:stripReleaseDebugSymbols
+Unable to strip the following libraries, packaging them as they are: libapminsighta.so, libapminsightb.so, libapplovin-native-crash-reporter.so, libbuffer_pgl.so, libfile_lock_pgl.so, libnms.so, libpglarmor.so, libtobEmbedPagEncrypt.so, libtt_ugen_layout.so. Run with --info option to learn more.
+
+> Task :app:collectReleaseDependencies
+> Task :app:configureReleaseDependencies
+> Task :app:parseReleaseIntegrityConfig UP-TO-DATE
+> Task :app:extractReleaseNativeSymbolTables
+> Task :app:validateSigningRelease
+> Task :app:processReleaseResources
+> Task :app:mergeReleaseJavaResource
+
+> Task :app:compileReleaseJavaWithJavac
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:6: warning: [deprecation] Camera in android.hardware has been deprecated
+import android.hardware.Camera.PreviewCallback;
+                       ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/PhotoHandler.java:15: warning: [deprecation] Camera in android.hardware has been deprecated
+import android.hardware.Camera.PictureCallback;
+                       ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/PrevActivity.java:92: warning: [deprecation] FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET in Intent has been deprecated
+            sharingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                                         ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/PrevActivity.java:133: warning: [deprecation] onBackPressed() in Activity has been deprecated
+    public void onBackPressed() {
+                ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/PrevActivity.java:135: warning: [deprecation] onBackPressed() in Activity has been deprecated
+        super.onBackPressed();
+             ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:30: warning: [deprecation] Camera in android.hardware has been deprecated
+    protected Camera mCamera;
+              ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:31: warning: [deprecation] Camera in android.hardware has been deprecated
+    protected List<Camera.Size> mPreviewSizeList;
+                   ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:31: warning: [deprecation] Camera.Size in Camera has been deprecated
+    protected List<Camera.Size> mPreviewSizeList;
+                         ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:32: warning: [deprecation] Camera in android.hardware has been deprecated
+    protected List<Camera.Size> mPictureSizeList;
+                   ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:32: warning: [deprecation] Camera.Size in Camera has been deprecated
+    protected List<Camera.Size> mPictureSizeList;
+                         ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:33: warning: [deprecation] Camera in android.hardware has been deprecated
+    protected Camera.Size mPreviewSize;
+              ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:33: warning: [deprecation] Camera.Size in Camera has been deprecated
+    protected Camera.Size mPreviewSize;
+                    ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:34: warning: [deprecation] Camera in android.hardware has been deprecated
+    protected Camera.Size mPictureSize;
+              ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:34: warning: [deprecation] Camera.Size in Camera has been deprecated
+    protected Camera.Size mPictureSize;
+                    ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:64: warning: [deprecation] SURFACE_TYPE_PUSH_BUFFERS in SurfaceHolder has been deprecated
+        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+                                     ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:64: warning: [deprecation] setType(int) in SurfaceHolder has been deprecated
+        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+               ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:67: warning: [deprecation] Camera in android.hardware has been deprecated
+            if (Camera.getNumberOfCameras() > cameraId) {
+                ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:67: warning: [deprecation] getNumberOfCameras() in Camera has been deprecated
+            if (Camera.getNumberOfCameras() > cameraId) {
+                      ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:77: warning: [deprecation] Camera in android.hardware has been deprecated
+            mCamera = Camera.open(mCameraId);
+                      ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:77: warning: [deprecation] open(int) in Camera has been deprecated
+            mCamera = Camera.open(mCameraId);
+                            ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:79: warning: [deprecation] Camera in android.hardware has been deprecated
+            mCamera = Camera.open();
+                      ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:79: warning: [deprecation] open() in Camera has been deprecated
+            mCamera = Camera.open();
+                            ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:81: warning: [deprecation] Camera in android.hardware has been deprecated
+        Camera.Parameters cameraParams = mCamera.getParameters();
+        ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:81: warning: [deprecation] Camera.Parameters in Camera has been deprecated
+        Camera.Parameters cameraParams = mCamera.getParameters();
+              ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:81: warning: [deprecation] getParameters() in Camera has been deprecated
+        Camera.Parameters cameraParams = mCamera.getParameters();
+                                                ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:82: warning: [deprecation] getSupportedPreviewSizes() in Camera.Parameters has been deprecated
+        mPreviewSizeList = cameraParams.getSupportedPreviewSizes();
+                                       ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:83: warning: [deprecation] getSupportedPictureSizes() in Camera.Parameters has been deprecated
+        mPictureSizeList = cameraParams.getSupportedPictureSizes();
+                                       ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:89: warning: [deprecation] setPreviewDisplay(SurfaceHolder) in Camera has been deprecated
+            mCamera.setPreviewDisplay(mHolder);
+                   ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:91: warning: [deprecation] release() in Camera has been deprecated
+            mCamera.release();
+                   ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:104: warning: [deprecation] stopPreview() in Camera has been deprecated
+        mCamera.stopPreview();
+               ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:106: warning: [deprecation] Camera in android.hardware has been deprecated
+        Camera.Parameters cameraParams = mCamera.getParameters();
+        ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:106: warning: [deprecation] Camera.Parameters in Camera has been deprecated
+        Camera.Parameters cameraParams = mCamera.getParameters();
+              ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:106: warning: [deprecation] getParameters() in Camera has been deprecated
+        Camera.Parameters cameraParams = mCamera.getParameters();
+                                                ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:112: warning: [deprecation] Camera in android.hardware has been deprecated
+            Camera.Size previewSize = determinePreviewSize(portrait, width, height);
+            ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:112: warning: [deprecation] Camera.Size in Camera has been deprecated
+            Camera.Size previewSize = determinePreviewSize(portrait, width, height);
+                  ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:113: warning: [deprecation] Camera in android.hardware has been deprecated
+            Camera.Size pictureSize = determinePictureSize(previewSize);
+            ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:113: warning: [deprecation] Camera.Size in Camera has been deprecated
+            Camera.Size pictureSize = determinePictureSize(previewSize);
+                  ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:133: warning: [deprecation] startPreview() in Camera has been deprecated
+            mCamera.startPreview();
+                   ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:162: warning: [deprecation] Camera in android.hardware has been deprecated
+    protected Camera.Size determinePreviewSize(boolean portrait, int reqWidth, int reqHeight) {
+              ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:162: warning: [deprecation] Camera.Size in Camera has been deprecated
+    protected Camera.Size determinePreviewSize(boolean portrait, int reqWidth, int reqHeight) {
+                    ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:178: warning: [deprecation] Camera in android.hardware has been deprecated
+            for (Camera.Size size : mPreviewSizeList) {
+                 ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:178: warning: [deprecation] Camera.Size in Camera has been deprecated
+            for (Camera.Size size : mPreviewSizeList) {
+                       ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:179: warning: [deprecation] width in Camera.Size has been deprecated
+                Log.v(LOG_TAG, "  w: " + size.width + ", h: " + size.height);
+                                             ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:179: warning: [deprecation] height in Camera.Size has been deprecated
+                Log.v(LOG_TAG, "  w: " + size.width + ", h: " + size.height);
+                                                                    ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:182: warning: [deprecation] Camera in android.hardware has been deprecated
+            for (Camera.Size size : mPictureSizeList) {
+                 ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:182: warning: [deprecation] Camera.Size in Camera has been deprecated
+            for (Camera.Size size : mPictureSizeList) {
+                       ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:183: warning: [deprecation] width in Camera.Size has been deprecated
+                Log.v(LOG_TAG, "  w: " + size.width + ", h: " + size.height);
+                                             ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:183: warning: [deprecation] height in Camera.Size has been deprecated
+                Log.v(LOG_TAG, "  w: " + size.width + ", h: " + size.height);
+                                                                    ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:191: warning: [deprecation] Camera in android.hardware has been deprecated
+        Camera.Size retSize = null;
+        ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:191: warning: [deprecation] Camera.Size in Camera has been deprecated
+        Camera.Size retSize = null;
+              ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:192: warning: [deprecation] Camera in android.hardware has been deprecated
+        for (Camera.Size size : mPreviewSizeList) {
+             ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:192: warning: [deprecation] Camera.Size in Camera has been deprecated
+        for (Camera.Size size : mPreviewSizeList) {
+                   ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:193: warning: [deprecation] width in Camera.Size has been deprecated
+            curRatio = ((float) size.width) / size.height;
+                                    ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:193: warning: [deprecation] height in Camera.Size has been deprecated
+            curRatio = ((float) size.width) / size.height;
+                                                  ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:204: warning: [deprecation] Camera in android.hardware has been deprecated
+    protected Camera.Size determinePictureSize(Camera.Size previewSize) {
+              ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:204: warning: [deprecation] Camera.Size in Camera has been deprecated
+    protected Camera.Size determinePictureSize(Camera.Size previewSize) {
+                    ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:204: warning: [deprecation] Camera in android.hardware has been deprecated
+    protected Camera.Size determinePictureSize(Camera.Size previewSize) {
+                                               ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:204: warning: [deprecation] Camera.Size in Camera has been deprecated
+    protected Camera.Size determinePictureSize(Camera.Size previewSize) {
+                                                     ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:205: warning: [deprecation] Camera in android.hardware has been deprecated
+        Camera.Size retSize = null;
+        ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:205: warning: [deprecation] Camera.Size in Camera has been deprecated
+        Camera.Size retSize = null;
+              ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:206: warning: [deprecation] Camera in android.hardware has been deprecated
+        for (Camera.Size size : mPictureSizeList) {
+             ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:206: warning: [deprecation] Camera.Size in Camera has been deprecated
+        for (Camera.Size size : mPictureSizeList) {
+                   ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:207: warning: [deprecation] equals(Object) in Camera.Size has been deprecated
+            if (size.equals(previewSize)) {
+                    ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:215: warning: [deprecation] width in Camera.Size has been deprecated
+        float reqRatio = ((float) previewSize.width) / previewSize.height;
+                                             ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:215: warning: [deprecation] height in Camera.Size has been deprecated
+        float reqRatio = ((float) previewSize.width) / previewSize.height;
+                                                                  ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:218: warning: [deprecation] Camera in android.hardware has been deprecated
+        for (Camera.Size size : mPictureSizeList) {
+             ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:218: warning: [deprecation] Camera.Size in Camera has been deprecated
+        for (Camera.Size size : mPictureSizeList) {
+                   ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:219: warning: [deprecation] width in Camera.Size has been deprecated
+            curRatio = ((float) size.width) / size.height;
+                                    ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:219: warning: [deprecation] height in Camera.Size has been deprecated
+            curRatio = ((float) size.width) / size.height;
+                                                  ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:230: warning: [deprecation] Camera in android.hardware has been deprecated
+    protected boolean adjustSurfaceLayoutSize(Camera.Size previewSize, boolean portrait,
+                                              ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:230: warning: [deprecation] Camera.Size in Camera has been deprecated
+    protected boolean adjustSurfaceLayoutSize(Camera.Size previewSize, boolean portrait,
+                                                    ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:234: warning: [deprecation] width in Camera.Size has been deprecated
+            tmpLayoutHeight = previewSize.width;
+                                         ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:235: warning: [deprecation] height in Camera.Size has been deprecated
+            tmpLayoutWidth = previewSize.height;
+                                        ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:237: warning: [deprecation] height in Camera.Size has been deprecated
+            tmpLayoutHeight = previewSize.height;
+                                         ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:238: warning: [deprecation] width in Camera.Size has been deprecated
+            tmpLayoutWidth = previewSize.width;
+                                        ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:294: warning: [deprecation] Camera in android.hardware has been deprecated
+    protected void configureCameraParameters(Camera.Parameters cameraParams, boolean portrait) {
+                                             ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:294: warning: [deprecation] Camera.Parameters in Camera has been deprecated
+    protected void configureCameraParameters(Camera.Parameters cameraParams, boolean portrait) {
+                                                   ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:297: warning: [deprecation] set(String,String) in Camera.Parameters has been deprecated
+                cameraParams.set(CAMERA_PARAM_ORIENTATION, CAMERA_PARAM_PORTRAIT);
+                            ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:299: warning: [deprecation] set(String,String) in Camera.Parameters has been deprecated
+                cameraParams.set(CAMERA_PARAM_ORIENTATION, CAMERA_PARAM_LANDSCAPE);
+                            ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:303: warning: [deprecation] getDefaultDisplay() in WindowManager has been deprecated
+            Display display = mActivity.getWindowManager().getDefaultDisplay();
+                                                          ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:322: warning: [deprecation] setDisplayOrientation(int) in Camera has been deprecated
+            mCamera.setDisplayOrientation(angle);
+                   ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:325: warning: [deprecation] width in Camera.Size has been deprecated
+        cameraParams.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
+                                                ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:325: warning: [deprecation] height in Camera.Size has been deprecated
+        cameraParams.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
+                                                                    ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:325: warning: [deprecation] setPreviewSize(int,int) in Camera.Parameters has been deprecated
+        cameraParams.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
+                    ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:326: warning: [deprecation] width in Camera.Size has been deprecated
+        cameraParams.setPictureSize(mPictureSize.width, mPictureSize.height);
+                                                ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:326: warning: [deprecation] height in Camera.Size has been deprecated
+        cameraParams.setPictureSize(mPictureSize.width, mPictureSize.height);
+                                                                    ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:326: warning: [deprecation] setPictureSize(int,int) in Camera.Parameters has been deprecated
+        cameraParams.setPictureSize(mPictureSize.width, mPictureSize.height);
+                    ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:328: warning: [deprecation] width in Camera.Size has been deprecated
+            Log.v(LOG_TAG, "Preview Actual Size - w: " + mPreviewSize.width + ", h: " + mPreviewSize.height);
+                                                                     ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:328: warning: [deprecation] height in Camera.Size has been deprecated
+            Log.v(LOG_TAG, "Preview Actual Size - w: " + mPreviewSize.width + ", h: " + mPreviewSize.height);
+                                                                                                    ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:329: warning: [deprecation] width in Camera.Size has been deprecated
+            Log.v(LOG_TAG, "Picture Actual Size - w: " + mPictureSize.width + ", h: " + mPictureSize.height);
+                                                                     ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:329: warning: [deprecation] height in Camera.Size has been deprecated
+            Log.v(LOG_TAG, "Picture Actual Size - w: " + mPictureSize.width + ", h: " + mPictureSize.height);
+                                                                                                    ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:332: warning: [deprecation] setParameters(Camera.Parameters) in Camera has been deprecated
+        mCamera.setParameters(cameraParams);
+               ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:344: warning: [deprecation] stopPreview() in Camera has been deprecated
+        mCamera.stopPreview();
+               ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:345: warning: [deprecation] release() in Camera has been deprecated
+        mCamera.release();
+               ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:353: warning: [deprecation] PreviewCallback in Camera has been deprecated
+    public void setOneShotPreviewCallback(PreviewCallback callback) {
+                                          ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:357: warning: [deprecation] setOneShotPreviewCallback(PreviewCallback) in Camera has been deprecated
+        mCamera.setOneShotPreviewCallback(callback);
+               ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:360: warning: [deprecation] PreviewCallback in Camera has been deprecated
+    public void setPreviewCallback(PreviewCallback callback) {
+                                   ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:364: warning: [deprecation] setPreviewCallback(PreviewCallback) in Camera has been deprecated
+        mCamera.setPreviewCallback(callback);
+               ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:367: warning: [deprecation] Camera in android.hardware has been deprecated
+    public Camera.Size getPreviewSize() {
+           ^
+/home/gaston/StudioProjects/MiLupa/app/src/main/java/lesbegueris/gaston/com/milupa/CameraPreview.java:367: warning: [deprecation] Camera.Size in Camera has been deprecated
+    public Camera.Size getPreviewSize() {
+                 ^
+
+> Task :app:bundleReleaseResources
+
+> Task :app:compileReleaseJavaWithJavac
+Note: Some input files additionally use or override a deprecated API.
+100 warnings
+
+> Task :app:dexBuilderRelease
+> Task :app:mergeReleaseGlobalSynthetics
+> Task :app:mergeExtDexRelease
+> Task :app:mergeDexRelease
+> Task :app:buildReleasePreBundle
+> Task :app:compileReleaseArtProfile
+> Task :app:packageReleaseBundle
+> Task :app:signReleaseBundle
+> Task :app:produceReleaseBundleIdeListingFile
+> Task :app:createReleaseBundleListingFileRedirect
+> Task :app:bundleRelease
+
+[Incubating] Problems report is available at: file:///home/gaston/StudioProjects/MiLupa/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 47s
+48 actionable tasks: 46 executed, 2 up-to-date
