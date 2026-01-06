@@ -21,6 +21,7 @@ import android.widget.Toast;
 import java.io.File;
 
 import lesbegueris.gaston.com.milupa.util.AppodealHelper;
+import lesbegueris.gaston.com.milupa.util.AdMobHelper;
 
 /**
  * Created by gaston on 05/09/17.
@@ -42,10 +43,13 @@ public class PrevActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_previ);
 
-        // Initialize Appodeal
+        // Initialize Appodeal for banner ads
         String appodealAppKey = getString(R.string.appodeal_app_key);
         AppodealHelper.initialize(this, appodealAppKey);
         AppodealHelper.showBanner(this, R.id.appodealBannerView);
+        
+        // Load AdMob interstitial ad
+        AdMobHelper.loadInterstitial(this);
 
         foto1 = getIntent().getExtras().getString("foto", foto);
 
@@ -68,10 +72,16 @@ public class PrevActivity extends Activity {
         iBtnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Close activity and return to camera - banner ad is already visible
-                Intent e = new Intent(PrevActivity.this, CamActivity.class);
-                startActivity(e);
-                finish();
+                // Show AdMob interstitial ad before closing
+                AdMobHelper.showInterstitial(PrevActivity.this, new Runnable() {
+                    @Override
+                    public void run() {
+                        // Close activity and return to camera after ad is closed
+                        Intent e = new Intent(PrevActivity.this, CamActivity.class);
+                        startActivity(e);
+                        finish();
+                    }
+                });
             }
         });
 
@@ -113,6 +123,11 @@ public class PrevActivity extends Activity {
         String appodealAppKey = getString(R.string.appodeal_app_key);
         AppodealHelper.initialize(this, appodealAppKey);
         AppodealHelper.showBanner(this, R.id.appodealBannerView);
+        
+        // Load AdMob interstitial ad if not already loaded
+        if (!AdMobHelper.isInterstitialLoaded()) {
+            AdMobHelper.loadInterstitial(this);
+        }
     }
 
     @Override
@@ -131,8 +146,14 @@ public class PrevActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        // Close activity - banner ad is already visible, no need for interstitial
-        super.onBackPressed();
+        // Show AdMob interstitial ad before closing
+        AdMobHelper.showInterstitial(this, new Runnable() {
+            @Override
+            public void run() {
+                // Close activity after ad is closed
+                PrevActivity.super.onBackPressed();
+            }
+        });
     }
 }
 

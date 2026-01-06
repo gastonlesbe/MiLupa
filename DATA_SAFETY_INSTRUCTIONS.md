@@ -113,3 +113,4 @@ Antes de enviar para revisión, verifica que:
 
 Google Play generalmente revisa las actualizaciones del formulario de Data Safety en **24-48 horas**. Una vez aprobado, tu app volverá a estar disponible en Google Play.
 
+
