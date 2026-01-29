@@ -14,9 +14,9 @@ android {
         applicationId "lesbegueris.gaston.com.milupa"
         minSdkVersion 23  // Updated to support Appodeal SDK 3.8.0.0 (requires minSdk 23)
         targetSdk 35
-        versionName '2.3'
+        versionName '2.4'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        versionCode 34
+        versionCode 35
     }
 
     signingConfigs {
@@ -88,4 +88,3 @@ dependencies {
         exclude group: "com.appodeal.ads.sdk.services", module: "sentry_analytics"
     }
 }
-

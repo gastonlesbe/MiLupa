@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.ContentValues;
@@ -13,7 +14,6 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -125,25 +125,11 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
 
         cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
 
-        if (mCamera == null) {
-            try {
-                mCamera = Camera.open();
-                mCamera.setDisplayOrientation(90);
-                parameters = mCamera.getParameters();
-                parameters.setRotation(90);
-                mCamera.setParameters(parameters);
-            } catch (Exception e) {
-                // Handle camera initialization failure
-                Log.e("CameraError", "Failed to initialize camera: " + e.getMessage());
-                // Display error message to user
-                finish(); // Or handle the error differently
-            }
+        // Proceed with permissions check
+        if (checkAndRequestPermissions()) {
+            // Permissions already granted, initialize camera directly
+            initializeCamera();
         }
-
-        parameters = mCamera.getParameters();
-        parameters.setRotation(90);
-        mCamera.setDisplayOrientation(90);
-        isFlash1 = true;
 
         imageView = (ImageView) findViewById(R.id.imageView);
         imageView.setVisibility(View.INVISIBLE);
@@ -252,10 +238,14 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
         mPreview.setFocusable(true);
         mPreview.setClickable(true);
         mPreview.setOnClickListener(this);
-        if (Build.VERSION.SDK_INT > 23) {
-            mCamera.getParameters();
-            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-            mCamera.setParameters(parameters);
+        if (Build.VERSION.SDK_INT > 23 && mCamera != null) {
+            try {
+                parameters = mCamera.getParameters();
+                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                mCamera.setParameters(parameters);
+            } catch (Exception e) {
+                Log.e("CameraError", "Error setting focus mode: " + e.getMessage());
+            }
         }
     }
 
@@ -295,6 +285,11 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
         String appodealAppKey = getString(R.string.appodeal_app_key);
         AppodealHelper.initialize(this, appodealAppKey);
         AppodealHelper.showBanner(this, R.id.appodealBannerView);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            if (mCamera == null) {
+                initializeCamera();
+            }
+        }
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -327,22 +322,9 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
     private boolean checkAndRequestPermissions() {
         int permissionCAMERA = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA);
-
-        int storagePermission = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE);
-
-        int storagePermission1 = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
         List<String> listPermissionsNeeded = new ArrayList<>();
-        if (storagePermission != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
         if (permissionCAMERA != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.CAMERA);
-        }
-        if (storagePermission1 != PackageManager.PERMISSION_GRANTED) {
-            listPermissionsNeeded.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
         if (!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(this,
@@ -356,12 +338,55 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_ACCOUNTS:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //Permission Granted Successfully. Write working code here.
+                boolean allPermissionsGranted = true;
+                for (int result : grantResults) {
+                    if (result != PackageManager.PERMISSION_GRANTED) {
+                        allPermissionsGranted = false;
+                        break;
+                    }
+                }
+                if (allPermissionsGranted && grantResults.length > 0) {
+                    // All permissions granted, initialize camera
+                    initializeCamera();
                 } else {
-                    //You did not accept the request can not use the functionality.
+                    // Permissions denied, show message and finish
+                    Toast.makeText(this, "Camera permission is required to use this app", Toast.LENGTH_LONG).show();
+                    finish();
                 }
                 break;
+        }
+    }
+
+    private void initializeCamera() {
+        if (mCamera == null) {
+            try {
+                mCamera = Camera.open();
+                if (mCamera != null) {
+                    mCamera.setDisplayOrientation(90);
+                    parameters = mCamera.getParameters();
+                    parameters.setRotation(90);
+                    mCamera.setParameters(parameters);
+                    isFlash1 = true;
+                }
+            } catch (Exception e) {
+                // Handle camera initialization failure
+                Log.e("CameraError", "Failed to initialize camera: " + e.getMessage());
+                Toast.makeText(this, "Failed to open camera: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                finish(); // Or handle the error differently
+                return; // Exit early if camera failed to initialize
+            }
+        }
+
+        // Only proceed if camera was successfully initialized
+        if (mCamera != null) {
+            try {
+                parameters = mCamera.getParameters();
+                parameters.setRotation(90);
+                mCamera.setDisplayOrientation(90);
+                isFlash1 = true;
+            } catch (Exception e) {
+                Log.e("CameraError", "Error setting camera parameters: " + e.getMessage());
+            }
         }
     }
 
@@ -402,35 +427,48 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        try {
-            mCamera = android.hardware.Camera.open();
-        }catch (RuntimeException ex){}
-
-        Camera.Parameters parameters = mCamera.getParameters();
-        List<Camera.Size> sizes = parameters.getSupportedPreviewSizes();
-        Camera.Size selected = sizes.get(0);
-        parameters.setPreviewSize(selected.width, selected.height);
-
-        mCamera.setParameters(parameters);
-        if (Build.VERSION.SDK_INT > 23) {
-            mCamera.getParameters();
-            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-            mCamera.setParameters(parameters);
+        // Check camera permission before opening camera
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            Log.w("CameraError", "Camera permission not granted in surfaceChanged");
+            return;
         }
 
-        mCamera.setDisplayOrientation(90);
-        mCamera.startPreview();
-        safeToTakePicture = true;
+        if (mCamera == null) {
+            Log.w("CameraError", "Camera not initialized yet in surfaceChanged");
+            return;
+        }
 
         try {
+            Camera.Parameters parameters = mCamera.getParameters();
+            List<Camera.Size> sizes = parameters.getSupportedPreviewSizes();
+            if (sizes != null && !sizes.isEmpty()) {
+                Camera.Size selected = sizes.get(0);
+                parameters.setPreviewSize(selected.width, selected.height);
+            }
+
+            mCamera.setParameters(parameters);
+            if (Build.VERSION.SDK_INT > 23) {
+                parameters = mCamera.getParameters();
+                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                mCamera.setParameters(parameters);
+            }
+
+            mCamera.setDisplayOrientation(90);
+            mCamera.startPreview();
+            safeToTakePicture = true;
+
             mCamera.setPreviewDisplay(mPreview.getHolder());
             mCamera.startPreview();
-        }catch (Exception e){
+        } catch (Exception e) {
+            Log.e("CameraError", "Error in surfaceChanged: " + e.getMessage());
         }
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
+        if (mCamera == null) {
+            return;
+        }
         try {
             SurfaceTexture surfaceTexture = new SurfaceTexture(10);
             mCamera.setPreviewTexture(surfaceTexture);
@@ -438,24 +476,36 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
             mCamera.setDisplayOrientation(90);
             setCameraDisplayOrientation(CamActivity.this, Camera.CameraInfo.CAMERA_FACING_BACK, mCamera);
         } catch (Exception e) {
+            Log.e("CameraError", "Error in surfaceCreated: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
     @Override
     public void onClick(View v) {
+        if (mCamera == null) {
+            return;
+        }
         if (safeToTakePicture) {
-            mCamera.takePicture(null, null, CamActivity.this);
-            safeToTakePicture = false;
+            try {
+                mCamera.takePicture(null, null, CamActivity.this);
+                safeToTakePicture = false;
+            } catch (Exception e) {
+                Log.e("CameraError", "Error taking picture: " + e.getMessage());
+            }
         }
 
-        if (isOn1) { // Turn off flash if it's on
-            iBtnFlash.setImageResource(R.mipmap.flashwhite);
-            iBtnFlash.refreshDrawableState();
-            parameters = mCamera.getParameters();
-            parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-            mCamera.setParameters(parameters);
-            isOn1 = false;
+        if (isOn1 && mCamera != null) { // Turn off flash if it's on
+            try {
+                iBtnFlash.setImageResource(R.mipmap.flashwhite);
+                iBtnFlash.refreshDrawableState();
+                parameters = mCamera.getParameters();
+                parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                mCamera.setParameters(parameters);
+                isOn1 = false;
+            } catch (Exception e) {
+                Log.e("CameraError", "Error turning off flash: " + e.getMessage());
+            }
         }
     }
 
@@ -575,47 +625,57 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (parameters.isZoomSupported()) {
-            final int maxZoomLevel = parameters.getMaxZoom();
-            Log.i("max ZOOM ", "is " + maxZoomLevel);
+        if (mCamera == null || parameters == null) {
+            return super.onKeyDown(keyCode, event);
+        }
+        
+        try {
+            if (parameters.isZoomSupported()) {
+                final int maxZoomLevel = parameters.getMaxZoom();
+                Log.i("max ZOOM ", "is " + maxZoomLevel);
 
-            if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
-                if (currentZoomLevel < maxZoomLevel) {
-                    currentZoomLevel++;
-                    mCamera.stopPreview(); // Stop preview before changing parameters
-                    parameters.setZoom(currentZoomLevel);
-                    mCamera.setParameters(parameters);
-                    mCamera.startPreview(); // Restart preview after applying parameters
-                    mPreview.setFocusable(true);
-                    if (Build.VERSION.SDK_INT > 23) {
-                        mCamera.getParameters();
-                        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                    if (currentZoomLevel < maxZoomLevel) {
+                        currentZoomLevel++;
+                        mCamera.stopPreview(); // Stop preview before changing parameters
+                        parameters.setZoom(currentZoomLevel);
                         mCamera.setParameters(parameters);
+                        mCamera.startPreview(); // Restart preview after applying parameters
+                        mPreview.setFocusable(true);
+                        if (Build.VERSION.SDK_INT > 23) {
+                            parameters = mCamera.getParameters();
+                            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                            mCamera.setParameters(parameters);
+                        }
                     }
-                }
-                return true;
-            } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
-                if (currentZoomLevel > 0) {
-                    currentZoomLevel--;
-                    mCamera.stopPreview(); // Stop preview
-                    parameters.setZoom(currentZoomLevel);
-                    mCamera.setParameters(parameters);
-                    mCamera.startPreview(); // Restart preview
-                    mPreview.setFocusable(true);
-                    if (Build.VERSION.SDK_INT > 23) {
-                        mCamera.getParameters();
-                        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                    return true;
+                } else if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                    if (currentZoomLevel > 0) {
+                        currentZoomLevel--;
+                        mCamera.stopPreview(); // Stop preview
+                        parameters = mCamera.getParameters();
+                        parameters.setZoom(currentZoomLevel);
                         mCamera.setParameters(parameters);
+                        mCamera.startPreview(); // Restart preview
+                        mPreview.setFocusable(true);
+                        if (Build.VERSION.SDK_INT > 23) {
+                            parameters = mCamera.getParameters();
+                            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                            mCamera.setParameters(parameters);
+                        }
                     }
+                    return true;
                 }
             }
+        } catch (Exception e) {
+            Log.e("CameraError", "Error in onKeyDown: " + e.getMessage());
         }
 
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             // Handled by onBackPressed()
             return true;
         }
-        return true;
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -638,26 +698,41 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
     }
 
     public void startNotification(){
+        // Create notification channel for Android 8.0+ (API 26+)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = "milupa_notification_channel";
+            String channelName = "MiLupa Notifications";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+
         Intent intent1 = new Intent(this, CamActivity.class);
         PendingIntent pIntent1 = PendingIntent.getActivity(this, (int)
                 System.currentTimeMillis(), intent1, PendingIntent.FLAG_IMMUTABLE);
 
         CharSequence titulo = getText(R.string.app_name);
-        Notification notification = new NotificationCompat.Builder(this)
+        String channelId = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? "milupa_notification_channel" : "";
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
                 .setContentText(titulo)
                 .setSmallIcon(R.drawable.ic_noti)
                 .setContentIntent(pIntent1)
-                .setOngoing(false)
-                .build();
+                .setOngoing(false);
+        
+        Notification notification = builder.build();
 
         NotificationManager mNotificationManager = (NotificationManager)
                 getSystemService(Context.NOTIFICATION_SERVICE);
 
-        mNotificationManager.notify(33, notification);
+        if (mNotificationManager != null) {
+            mNotificationManager.notify(33, notification);
+        }
     }
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
     }
 }
-
