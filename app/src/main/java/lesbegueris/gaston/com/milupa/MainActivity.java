@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         maybeShowWelcomeOrRequestPermissions();
+        showGriscalPromo();
     }
 
     private void maybeShowWelcomeOrRequestPermissions() {
@@ -228,5 +229,29 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         // Hide banner when activity is destroyed
         AppodealHelper.hideBanner(this);
+    }
+
+    private void showGriscalPromo() {
+        android.content.SharedPreferences promoPrefs = getSharedPreferences("griscal_promo", MODE_PRIVATE);
+        if (promoPrefs.getBoolean("shown", false)) return;
+        android.view.View promoView = getLayoutInflater().inflate(R.layout.dialog_griscal_promo, null);
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        builder.setView(promoView);
+        builder.setCancelable(true);
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
+        promoView.findViewById(R.id.btnPromoCta).setOnClickListener(v -> {
+            promoPrefs.edit().putBoolean("shown", true).apply();
+            startActivity(new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse("https://griscal.app")));
+            dialog.dismiss();
+        });
+        promoView.findViewById(R.id.btnPromoDismiss).setOnClickListener(v -> {
+            promoPrefs.edit().putBoolean("shown", true).apply();
+            dialog.dismiss();
+        });
+        new android.os.Handler().postDelayed(() -> {
+            if (!isFinishing() && !isDestroyed()) {
+                dialog.show();
+            }
+        }, 1500);
     }
 }

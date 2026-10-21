@@ -8,15 +8,15 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdk 35
+    compileSdk 36
     ndkVersion "26.1.10909125"
     defaultConfig {
         applicationId "lesbegueris.gaston.com.milupa"
         minSdkVersion 23  // Updated to support Appodeal SDK 3.8.0.0 (requires minSdk 23)
-        targetSdk 35
-        versionName '2.4'
+        targetSdk 36
+        versionName '2.9.1'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
-        versionCode 35
+        versionCode 42
     }
 
     signingConfigs {
@@ -33,7 +33,7 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
     }
@@ -67,20 +67,29 @@ allprojects {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation('androidx.test.espresso:espresso-core:3.1.0', {
+    androidTestImplementation('androidx.test.espresso:espresso-core:3.6.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'com.google.android.gms:play-services-ads:23.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
+    implementation 'com.google.android.gms:play-services-ads:25.2.0'
     implementation 'junit:junit:4.13.2'
-    implementation 'androidx.core:core:1.13.1'
-    implementation 'androidx.test.ext:junit:1.2.1'
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.core:core:1.18.0'
+    implementation 'androidx.test.ext:junit:1.3.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.preference:preference:1.2.1'
+    implementation 'com.google.android.play:review:2.0.1'
+    implementation 'com.google.android.material:material:1.12.0'
+
+    // Force current Play Billing Library: without this, excluding the Appodeal
+    // "appsflyer" services module below removes the only dependency that was
+    // forcing com.my.tracker's billingclient range [7.0.0, 8.0.0) up to 8.0.0,
+    // so Gradle resolved it down to the old 7.1.1 floor instead. (Same version
+    // as MiLinterna, which already declares this directly.)
+    implementation 'com.android.billingclient:billing:8.0.0'
 
     // Appodeal SDK (same version as MyLinterna)
-    implementation("com.appodeal.ads:sdk:3.8.0.0") {
+    implementation("com.appodeal.ads:sdk:3.12.0.1") {
         exclude group: "com.appodeal.ads.sdk.services", module: "adjust"
         exclude group: "com.appodeal.ads.sdk.services", module: "appsflyer"
         exclude group: "com.appodeal.ads.sdk.services", module: "facebook_analytics"

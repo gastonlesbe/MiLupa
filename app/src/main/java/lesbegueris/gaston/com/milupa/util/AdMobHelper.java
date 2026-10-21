@@ -15,7 +15,8 @@ public class AdMobHelper {
     private static final String TAG = "AdMobHelper";
     
     // Interstitial Ad Unit ID for MiLupa
-    private static final String INTERSTITIAL_AD_UNIT_ID = "ca-app-pub-9841764898906750/5507215775";
+    // Ad unit ID lives in res/values/ads.xml (production); src/debug/res/values/ads.xml
+    // overrides it with Google's sample ID for debug builds.
     
     private static InterstitialAd mInterstitialAd;
     private static Runnable pendingCallback;
@@ -32,7 +33,7 @@ public class AdMobHelper {
         
         AdRequest adRequest = new AdRequest.Builder().build();
 
-        InterstitialAd.load(activity, INTERSTITIAL_AD_UNIT_ID, adRequest,
+        InterstitialAd.load(activity, activity.getString(lesbegueris.gaston.com.milupa.R.string.admob_interstitial_id), adRequest,
             new InterstitialAdLoadCallback() {
                 @Override
                 public void onAdLoaded(InterstitialAd interstitialAd) {

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#0D1B2A">
+
+    <!-- Drag handle -->
+    <View
+        android:layout_width="36dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="8dp"
+        android:background="#2A4860" />
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="12dp">
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_ms_apps"
+            android:tint="#00C8F0"
+            android:layout_marginEnd="12dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/menu_our_apps"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+    <!-- Cyan accent line -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#00C8F0"
+        android:alpha="0.5"/>
+
+    <TextView android:id="@+id/appCarePets"
+        style="@style/AppMenuItem" android:text="CarePal: Mascotas y Salud" />
+    <TextView android:id="@+id/appCareCars"
+        style="@style/AppMenuItem" android:text="CarePal: Autos y Service" />
+    <TextView android:id="@+id/appCareFamily"
+        style="@style/AppMenuItem" android:text="CarePal: Familia y Agenda" />
+    <TextView android:id="@+id/appCareHouse"
+        style="@style/AppMenuItem" android:text="CarePal: Hogar y Mantenimiento" />
+    <TextView android:id="@+id/appGriscal"
+        style="@style/AppMenuItem" android:text="Griscal: Hogar y Familia" />
+    <TextView android:id="@+id/appGpsAlert"
+        style="@style/AppMenuItem" android:text="GPS Alert – Location Alarm" />
+    <TextView android:id="@+id/appMiLinterna"
+        style="@style/AppMenuItem" android:text="MiLinterna (LightOn Noti)" />
+    <TextView android:id="@+id/appPermission"
+        style="@style/AppMenuItem" android:text="Permission Inspector" />
+
+    <View android:layout_width="match_parent" android:layout_height="16dp"/>
+</LinearLayout>

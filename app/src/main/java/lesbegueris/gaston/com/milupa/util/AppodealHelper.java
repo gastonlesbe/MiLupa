@@ -27,6 +27,8 @@ public class AppodealHelper {
         }
 
         try {
+            // Test mode in debug builds (res bool overridden in src/debug) — never live ads from dev/emulator runs
+            Appodeal.setTesting(activity.getResources().getBoolean(lesbegueris.gaston.com.milupa.R.bool.appodeal_testing));
             // Initialize Appodeal with BANNER and INTERSTITIAL ad types
             Appodeal.initialize(activity, appKey, Appodeal.BANNER | Appodeal.INTERSTITIAL);
             isInitialized = true;

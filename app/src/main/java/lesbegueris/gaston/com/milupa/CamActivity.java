@@ -21,7 +21,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.media.CamcorderProfile;
 import android.media.MediaActionSound;
+import android.media.MediaRecorder;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -41,7 +44,9 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -62,6 +67,10 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.media.Image;
 import android.media.ImageReader;
 
+import com.google.android.play.core.review.ReviewInfo;
+import com.google.android.play.core.review.ReviewManager;
+import com.google.android.play.core.review.ReviewManagerFactory;
+
 import lesbegueris.gaston.com.milupa.util.AppodealHelper;
 
 /**
@@ -81,7 +90,9 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
     private CaptureRequest.Builder previewRequestBuilder;
     private ImageReader imageReader;
 
-    ImageButton  iBtnSave, iBtnClose, iBtnCam, iBtnZoomIn, iBtnZoomOut, imgBtnHelp;
+    ImageButton  iBtnSave, iBtnClose, iBtnCam, iBtnZoomIn, iBtnZoomOut, imgBtnHelp, ibtnMenu, iBtnVideo;
+    private MediaRecorder mediaRecorder;
+    private boolean isRecording = false;
     ImageView  imgBtnOpen, imgZoomIn, imgZoomOut;
 
     boolean isOn1 = false;
@@ -118,6 +129,16 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
         setContentView(R.layout.activity_cam);
         startNotification();
 
+        if (savedInstanceState == null) {
+            trackOpens();
+        }
+
+        ibtnMenu = (ImageButton) findViewById(R.id.ibtnMenu);
+        ibtnMenu.setOnClickListener(v -> showBottomSheet());
+
+        iBtnVideo = (ImageButton) findViewById(R.id.iBtnVideo);
+        iBtnVideo.setOnClickListener(v -> toggleVideoRecording());
+
         // Initialize Appodeal
         String appodealAppKey = getString(R.string.appodeal_app_key);
         AppodealHelper.initialize(this, appodealAppKey);
@@ -148,7 +169,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
                     }
 
                     if (isOn1) { // Turn off flash if it's on
-                        iBtnFlash.setImageResource(R.mipmap.flashwhite);
+                        iBtnFlash.setImageResource(R.drawable.ic_flash_off);
                         parameters = mCamera.getParameters();
                         parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                         mCamera.setParameters(parameters);
@@ -176,14 +197,18 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
                     Log.i("max ZOOM ", "is " + maxZoomLevel);
                     if (currentZoomLevel < maxZoomLevel) {
                         currentZoomLevel++;
-                        mCamera.stopPreview();
                         parameters.setZoom(currentZoomLevel);
-                        mCamera.setParameters(parameters);
-                        mCamera.startPreview();
-                        mPreview.setFocusable(true);
-                        if (Build.VERSION.SDK_INT > 23) {
-                            parameters = mCamera.getParameters();
-                            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                        if (!isRecording) {
+                            mCamera.stopPreview();
+                            mCamera.setParameters(parameters);
+                            mCamera.startPreview();
+                            mPreview.setFocusable(true);
+                            if (Build.VERSION.SDK_INT > 23) {
+                                parameters = mCamera.getParameters();
+                                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                                mCamera.setParameters(parameters);
+                            }
+                        } else {
                             mCamera.setParameters(parameters);
                         }
                     }
@@ -204,15 +229,19 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
                 try {
                     if (currentZoomLevel > 0) {
                         currentZoomLevel--;
-                        mCamera.stopPreview();
                         parameters = mCamera.getParameters();
                         parameters.setZoom(currentZoomLevel);
-                        mCamera.setParameters(parameters);
-                        mCamera.startPreview();
-                        mPreview.setFocusable(true);
-                        if (Build.VERSION.SDK_INT > 23) {
-                            parameters = mCamera.getParameters();
-                            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                        if (!isRecording) {
+                            mCamera.stopPreview();
+                            mCamera.setParameters(parameters);
+                            mCamera.startPreview();
+                            mPreview.setFocusable(true);
+                            if (Build.VERSION.SDK_INT > 23) {
+                                parameters = mCamera.getParameters();
+                                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                                mCamera.setParameters(parameters);
+                            }
+                        } else {
                             mCamera.setParameters(parameters);
                         }
                     }
@@ -224,7 +253,6 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
         });
 
         iBtnFlash = (ImageButton) findViewById(R.id.iBtnFlash);
-        iBtnFlash.setRotation(-90);
         iBtnFlash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -265,16 +293,16 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
     @Override
     public void onPause() {
         super.onPause();
+        if (isRecording) stopVideoRecording();
         releaseCameraAndPreview();
-        // Hide banner when activity pauses
         AppodealHelper.hideBanner(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (isRecording) stopVideoRecording();
         releaseCameraAndPreview();
-        // Hide banner when activity is destroyed
         AppodealHelper.hideBanner(this);
     }
 
@@ -295,7 +323,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (isFlash1) {
             if (!isOn1) {
-                iBtnFlash.setImageResource(R.mipmap.flashoutwhite);
+                iBtnFlash.setImageResource(R.drawable.ic_flash_on);
                 Toast.makeText(getApplicationContext(), "Light On", Toast.LENGTH_LONG).show();
                 mCamera.getParameters();
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
@@ -305,7 +333,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
                 mCamera.startPreview();
                 isOn1 = true;
             } else {
-                iBtnFlash.setImageResource(R.mipmap.flashwhite);
+                iBtnFlash.setImageResource(R.drawable.ic_flash_off);
                 Toast.makeText(getApplicationContext(), "Light Off", Toast.LENGTH_LONG).show();
                 parameters = mCamera.getParameters();
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
@@ -320,11 +348,14 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
     }
 
     private boolean checkAndRequestPermissions() {
-        int permissionCAMERA = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA);
+        int permissionCAMERA = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        int permissionAUDIO = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
         List<String> listPermissionsNeeded = new ArrayList<>();
         if (permissionCAMERA != PackageManager.PERMISSION_GRANTED) {
             listPermissionsNeeded.add(Manifest.permission.CAMERA);
+        }
+        if (permissionAUDIO != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.RECORD_AUDIO);
         }
         if (!listPermissionsNeeded.isEmpty()) {
             ActivityCompat.requestPermissions(this,
@@ -391,37 +422,37 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
     }
 
     public void turnOn() {
-        if (isFlash1 && mCamera != null) { // Added null check for mCamera
+        if (isFlash1 && mCamera != null) {
             try {
+                parameters = mCamera.getParameters();
                 if (!isOn1) {
-                    // Activate flash
-                    iBtnFlash.setImageResource(R.mipmap.flashoutwhite);
+                    iBtnFlash.setImageResource(R.drawable.ic_flash_on);
                     iBtnFlash.refreshDrawableState();
-                    parameters = mCamera.getParameters();
                     parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-                    mCamera.stopPreview(); // Stop preview before changing parameters
-                    mCamera.setParameters(parameters);
-                    mCamera.startPreview(); // Restart preview after applying parameters
+                    if (!isRecording) {
+                        mCamera.stopPreview();
+                        mCamera.setParameters(parameters);
+                        mCamera.startPreview();
+                    } else {
+                        mCamera.setParameters(parameters);
+                    }
                     isOn1 = true;
-                    Log.d("Flash", "Flash turned ON, icon changed to flashoutwhite, isOn1=" + isOn1);
                 } else {
-                    // Deactivate flash - return to original state
-                    iBtnFlash.setImageResource(R.mipmap.flashwhite);
+                    iBtnFlash.setImageResource(R.drawable.ic_flash_off);
                     iBtnFlash.refreshDrawableState();
-                    parameters = mCamera.getParameters();
                     parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                    mCamera.stopPreview(); // Stop preview
-                    mCamera.setParameters(parameters);
-                    mCamera.startPreview(); // Restart preview
+                    if (!isRecording) {
+                        mCamera.stopPreview();
+                        mCamera.setParameters(parameters);
+                        mCamera.startPreview();
+                    } else {
+                        mCamera.setParameters(parameters);
+                    }
                     isOn1 = false;
-                    Log.d("Flash", "Flash turned OFF, icon changed to flashwhite, isOn1=" + isOn1);
                 }
             } catch (Exception e) {
                 Log.e("FlashError", "Error toggling flash: " + e.getMessage());
-                e.printStackTrace();
             }
-        } else {
-            Log.w("Flash", "Cannot toggle flash: isFlash1=" + isFlash1 + ", mCamera=" + (mCamera != null));
         }
     }
 
@@ -497,7 +528,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
 
         if (isOn1 && mCamera != null) { // Turn off flash if it's on
             try {
-                iBtnFlash.setImageResource(R.mipmap.flashwhite);
+                iBtnFlash.setImageResource(R.drawable.ic_flash_off);
                 iBtnFlash.refreshDrawableState();
                 parameters = mCamera.getParameters();
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
@@ -689,12 +720,162 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
         });
     }
 
+    private void toggleVideoRecording() {
+        if (!isRecording) {
+            startVideoRecording();
+        } else {
+            stopVideoRecording();
+        }
+    }
+
+    private void startVideoRecording() {
+        if (mCamera == null) return;
+        try {
+            mCamera.unlock();
+
+            mediaRecorder = new MediaRecorder();
+            mediaRecorder.setCamera(mCamera);
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.CAMCORDER);
+            mediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+            mediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
+            mediaRecorder.setOrientationHint(90);
+
+            java.io.File moviesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+            if (!moviesDir.exists()) moviesDir.mkdirs();
+            java.io.File outputFile = new java.io.File(moviesDir, "MiLupa_" + System.currentTimeMillis() + ".mp4");
+            mediaRecorder.setOutputFile(outputFile.getAbsolutePath());
+
+            mediaRecorder.setPreviewDisplay(mPreview.getHolder().getSurface());
+            mediaRecorder.prepare();
+            mediaRecorder.start();
+
+            isRecording = true;
+            videoOn = true;
+            iBtnVideo.setImageResource(R.drawable.ic_stop);
+            Toast.makeText(this, "Grabando...", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("VideoError", "Error starting video: " + e.getMessage());
+            releaseMediaRecorder();
+        }
+    }
+
+    private void stopVideoRecording() {
+        try {
+            mediaRecorder.stop();
+        } catch (RuntimeException e) {
+            Log.e("VideoError", "Error stopping video: " + e.getMessage());
+        }
+        java.io.File moviesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+        MediaScannerConnection.scanFile(this,
+                new String[]{moviesDir.getAbsolutePath()}, null, null);
+        releaseMediaRecorder();
+        isRecording = false;
+        videoOn = false;
+        iBtnVideo.setImageResource(R.drawable.ic_video);
+        mCamera.lock();
+        mCamera.startPreview();
+        safeToTakePicture = true;
+        Toast.makeText(this, "Video guardado en Películas", Toast.LENGTH_SHORT).show();
+    }
+
+    private void releaseMediaRecorder() {
+        if (mediaRecorder != null) {
+            mediaRecorder.reset();
+            mediaRecorder.release();
+            mediaRecorder = null;
+        }
+    }
+
     private void releaseCameraAndPreview() {
         if (mCamera != null) {
             mCamera.setPreviewCallback(null);
             mCamera.release();
             mCamera = null;
         }
+    }
+
+    private void trackOpens() {
+        android.content.SharedPreferences prefs = getSharedPreferences("app_opens", MODE_PRIVATE);
+        int count = prefs.getInt("count", 0) + 1;
+        prefs.edit().putInt("count", count).apply();
+        if (count == 10) {
+            new android.os.Handler().postDelayed(this::requestInAppReview, 2000);
+        }
+    }
+
+    private void requestInAppReview() {
+        ReviewManager manager = ReviewManagerFactory.create(this);
+        manager.requestReviewFlow().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                ReviewInfo reviewInfo = task.getResult();
+                manager.launchReviewFlow(this, reviewInfo);
+            }
+        });
+    }
+
+    private void showBottomSheet() {
+        BottomSheetDialog dialog = new BottomSheetDialog(this, R.style.BottomSheetDialogTheme);
+        View view = dialog.getLayoutInflater().inflate(R.layout.bottom_sheet_menu, null);
+
+        try {
+            String v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            ((TextView) view.findViewById(R.id.menuVersion)).setText("v" + v);
+        } catch (PackageManager.NameNotFoundException ignored) {}
+
+        view.findViewById(R.id.menuContact).setOnClickListener(v -> { mandarEmail(); dialog.dismiss(); });
+        view.findViewById(R.id.menuOurApps).setOnClickListener(v -> { dialog.dismiss(); showAppsBottomSheet(); });
+        view.findViewById(R.id.menuShare).setOnClickListener(v -> { share(); dialog.dismiss(); });
+        view.findViewById(R.id.menuRate).setOnClickListener(v -> { rateMe(); dialog.dismiss(); });
+
+        dialog.setContentView(view);
+        dialog.show();
+    }
+
+    private void showAppsBottomSheet() {
+        BottomSheetDialog dialog = new BottomSheetDialog(this, R.style.BottomSheetDialogTheme);
+        View view = dialog.getLayoutInflater().inflate(R.layout.bottom_sheet_apps, null);
+
+        view.findViewById(R.id.appCarePets).setOnClickListener(v -> { openPlayStore("com.gastonlesbegueris.caretemplate.pets"); dialog.dismiss(); });
+        view.findViewById(R.id.appCareCars).setOnClickListener(v -> { openPlayStore("com.gastonlesbegueris.caretemplate.cars"); dialog.dismiss(); });
+        view.findViewById(R.id.appCareFamily).setOnClickListener(v -> { openPlayStore("com.gastonlesbegueris.caretemplate.family"); dialog.dismiss(); });
+        view.findViewById(R.id.appCareHouse).setOnClickListener(v -> { openPlayStore("com.gastonlesbegueris.caretemplate.house"); dialog.dismiss(); });
+        view.findViewById(R.id.appGriscal).setOnClickListener(v -> { openPlayStore("app.griscal.notif"); dialog.dismiss(); });
+        view.findViewById(R.id.appGpsAlert).setOnClickListener(v -> { openPlayStore("com.gaston.lesbegueris.notepases"); dialog.dismiss(); });
+        view.findViewById(R.id.appMiLinterna).setOnClickListener(v -> { openPlayStore("lesbegueris.gaston.com.milinterna"); dialog.dismiss(); });
+        view.findViewById(R.id.appPermission).setOnClickListener(v -> { openPlayStore("com.griscal.permissioninspector"); dialog.dismiss(); });
+
+        dialog.setContentView(view);
+        dialog.show();
+    }
+
+    private void openPlayStore(String packageName) {
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("market://details?id=" + packageName)));
+        } catch (android.content.ActivityNotFoundException e) {
+            startActivity(new Intent(Intent.ACTION_VIEW,
+                    Uri.parse("https://play.google.com/store/apps/details?id=" + packageName)));
+        }
+    }
+
+    private void share() {
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=lesbegueris.gaston.com.milupa");
+        startActivity(Intent.createChooser(share, "¡¡¡Compartir!!!"));
+    }
+
+    private void rateMe() {
+        startActivity(new Intent(Intent.ACTION_VIEW,
+                Uri.parse("market://details?id=lesbegueris.gaston.com.milupa")));
+    }
+
+    private void mandarEmail() {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("plain/text");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"lesberweb@gmail.com"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Desde MiLupa");
+        startActivity(Intent.createChooser(intent, ""));
     }
 
     public void startNotification(){
