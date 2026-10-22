@@ -1,11 +1,15 @@
 apply plugin: 'com.android.application'
 
-// Cargar propiedades del keystore
-def keystorePropertiesFile = rootProject.file("keystore.properties")
-def keystoreProperties = new Properties()
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+// Firma: las claves van en .env (no versionado) o en variables de entorno
+def signingEnv = [:]
+def signingEnvFile = rootProject.file(".env")
+if (signingEnvFile.exists()) {
+    signingEnvFile.eachLine { line ->
+        def m = line =~ /^\s*([A-Z_]+)\s*=\s*(.*?)\s*$/
+        if (m.matches()) signingEnv[m.group(1)] = m.group(2)
+    }
 }
+def signingValue = { String key -> signingEnv[key] ?: System.getenv(key) }
 
 android {
     compileSdk 36
@@ -21,11 +25,11 @@ android {
 
     signingConfigs {
         release {
-            if (keystorePropertiesFile.exists()) {
-                storeFile rootProject.file(keystoreProperties['storeFile'])
-                storePassword keystoreProperties['storePassword']
-                keyAlias keystoreProperties['keyAlias']
-                keyPassword keystoreProperties['keyPassword']
+            if (signingValue('KEYSTORE_FILE')) {
+                storeFile file(signingValue('KEYSTORE_FILE'))
+                storePassword signingValue('KEYSTORE_PASSWORD')
+                keyAlias signingValue('KEY_ALIAS')
+                keyPassword signingValue('KEY_PASSWORD')
             }
         }
     }

@@ -4,7 +4,7 @@
 EXPECTED_SHA1="97:33:B7:09:B1:B5:F4:F8:40:72:DB:F2:5E:C1:39:3D:57:71:6B:23"
 EXPECTED_SHA1_CLEAN="9733B709B1B5F4F84072DBF25EC1393D57716B23"
 
-PASSWORD="Bru1034Bri"
+PASSWORD="${KEYSTORE_PASSWORD:?definí KEYSTORE_PASSWORD (ver .env)}"
 
 echo "=========================================="
 echo "Verificación SHA1 con contraseña"
