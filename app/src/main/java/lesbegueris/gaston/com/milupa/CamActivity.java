@@ -67,11 +67,8 @@ import android.hardware.camera2.TotalCaptureResult;
 import android.media.Image;
 import android.media.ImageReader;
 
-import com.google.android.play.core.review.ReviewInfo;
-import com.google.android.play.core.review.ReviewManager;
-import com.google.android.play.core.review.ReviewManagerFactory;
-
 import lesbegueris.gaston.com.milupa.util.AppodealHelper;
+import lesbegueris.gaston.com.milupa.util.ReviewHelper;
 
 /**
  * Created by gaston on 13/08/17.
@@ -122,16 +119,14 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private Bitmap bm;
     private boolean safeToTakePicture = false;
+    // True once the user zoomed in or saved a photo in this session (positive moment for in-app review)
+    private boolean sessionHadSuccess = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cam);
         startNotification();
-
-        if (savedInstanceState == null) {
-            trackOpens();
-        }
 
         ibtnMenu = (ImageButton) findViewById(R.id.ibtnMenu);
         ibtnMenu.setOnClickListener(v -> showBottomSheet());
@@ -197,6 +192,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
                     Log.i("max ZOOM ", "is " + maxZoomLevel);
                     if (currentZoomLevel < maxZoomLevel) {
                         currentZoomLevel++;
+                        markSuccessfulUse();
                         parameters.setZoom(currentZoomLevel);
                         if (!isRecording) {
                             mCamera.stopPreview();
@@ -571,6 +567,14 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
                 }
             });
 
+            // Photo saved = task completed: a positive moment to (maybe) ask for a review
+            markSuccessfulUse();
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                if (!isRecording && !isFinishing() && !isDestroyed() && hasWindowFocus()) {
+                    ReviewHelper.maybeRequestReview(CamActivity.this, null);
+                }
+            }, 1500);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -668,6 +672,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
                 if (keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
                     if (currentZoomLevel < maxZoomLevel) {
                         currentZoomLevel++;
+                        markSuccessfulUse();
                         mCamera.stopPreview(); // Stop preview before changing parameters
                         parameters.setZoom(currentZoomLevel);
                         mCamera.setParameters(parameters);
@@ -711,6 +716,19 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
 
     @Override
     public void onBackPressed() {
+        // Leaving after a successful magnifier session: if eligible, show the Play review
+        // flow instead of the interstitial (never stack both), then close.
+        if (sessionHadSuccess && !isRecording && ReviewHelper.isEligible(this)) {
+            ReviewHelper.maybeRequestReview(this, new Runnable() {
+                @Override
+                public void run() {
+                    if (!isFinishing() && !isDestroyed()) {
+                        CamActivity.super.onBackPressed();
+                    }
+                }
+            });
+            return;
+        }
         // Show interstitial ad when closing activity
         AppodealHelper.showInterstitial(CamActivity.this, new Runnable() {
             @Override
@@ -794,23 +812,11 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
         }
     }
 
-    private void trackOpens() {
-        android.content.SharedPreferences prefs = getSharedPreferences("app_opens", MODE_PRIVATE);
-        int count = prefs.getInt("count", 0) + 1;
-        prefs.edit().putInt("count", count).apply();
-        if (count == 10) {
-            new android.os.Handler().postDelayed(this::requestInAppReview, 2000);
-        }
-    }
-
-    private void requestInAppReview() {
-        ReviewManager manager = ReviewManagerFactory.create(this);
-        manager.requestReviewFlow().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                ReviewInfo reviewInfo = task.getResult();
-                manager.launchReviewFlow(this, reviewInfo);
-            }
-        });
+    /** Counts this session as a successful magnifier use (once per calendar day). */
+    private void markSuccessfulUse() {
+        if (sessionHadSuccess) return;
+        sessionHadSuccess = true;
+        ReviewHelper.recordSuccessfulUse(this);
     }
 
     private void showBottomSheet() {
