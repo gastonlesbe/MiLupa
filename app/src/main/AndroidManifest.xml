@@ -40,13 +40,17 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
         </activity>
+        <!-- Plain android.app.Activity (not ComponentActivity): keep legacy onBackPressed /
+             KEYCODE_BACK dispatch on Android 16 until it is migrated to OnBackPressedDispatcher. -->
         <activity android:name=".CamActivity"
+            android:enableOnBackInvokedCallback="false"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait"
             android:largeHeap="true"
             android:exported="true">
         </activity>
         <activity android:name=".PrevActivity"
+            android:enableOnBackInvokedCallback="false"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait"
             android:exported="false"/>

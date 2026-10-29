@@ -6,7 +6,7 @@
     <string name="BajarVolumenAleja">Bajar Volumen Aleja</string>
     <string name="ImagenesGuardanPictures">Las Imagenes se guardan en la carpeta \'Pictures\'</string>
     <string name="zoom">Subir Volumen para Acercar, Bajar Volumen para Alejar.</string>
-    <string name="appodeal_app_key">c22f42ed3ea907d8928fa5653d7b431d406cfce77cdc44d7</string>
+    <string name="appodeal_app_key" translatable="false">c22f42ed3ea907d8928fa5653d7b431d406cfce77cdc44d7</string>
     <string name="griscal_promo_message">Organizá tu familia, mascotas, hogar y vehículos — todo en una sola app. Gratis para probar.</string>
     <string name="griscal_promo_cta">Probar Griscal</string>
     <string name="griscal_promo_dismiss">Ahora no</string>
