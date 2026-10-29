@@ -103,7 +103,7 @@ public class PrevActivity extends Activity {
         }
         sharingIntent.setType("image/*");
         sharingIntent.putExtra(Intent.EXTRA_STREAM, imagePath);
-        startActivity(Intent.createChooser(sharingIntent, "Share Image Using"));
+        startActivity(Intent.createChooser(sharingIntent, getString(R.string.share_image_using)));
     }
     private void share(){
         Intent share = new Intent(Intent.ACTION_SEND);
@@ -113,7 +113,7 @@ public class PrevActivity extends Activity {
         File imageFileToShare = new File(foto1);
         Uri uri = Uri.parse(foto1.toString());
         share.putExtra(Intent.EXTRA_STREAM, uri);
-        startActivity(Intent.createChooser(share, "Share Image!"));
+        startActivity(Intent.createChooser(share, getString(R.string.share_image)));
     }
 
     @Override

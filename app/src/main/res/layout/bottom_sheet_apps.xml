@@ -46,21 +46,21 @@
         android:alpha="0.5"/>
 
     <TextView android:id="@+id/appCarePets"
-        style="@style/AppMenuItem" android:text="CarePal: Mascotas y Salud" />
+        style="@style/AppMenuItem" android:text="@string/menu_app_carepal_pets" />
     <TextView android:id="@+id/appCareCars"
-        style="@style/AppMenuItem" android:text="CarePal: Autos y Service" />
+        style="@style/AppMenuItem" android:text="@string/menu_app_carepal_cars" />
     <TextView android:id="@+id/appCareFamily"
-        style="@style/AppMenuItem" android:text="CarePal: Familia y Agenda" />
+        style="@style/AppMenuItem" android:text="@string/menu_app_carepal_family" />
     <TextView android:id="@+id/appCareHouse"
-        style="@style/AppMenuItem" android:text="CarePal: Hogar y Mantenimiento" />
+        style="@style/AppMenuItem" android:text="@string/menu_app_carepal_house" />
     <TextView android:id="@+id/appGriscal"
-        style="@style/AppMenuItem" android:text="Griscal: Hogar y Familia" />
+        style="@style/AppMenuItem" android:text="@string/menu_app_griscal" />
     <TextView android:id="@+id/appGpsAlert"
-        style="@style/AppMenuItem" android:text="GPS Alert – Location Alarm" />
+        style="@style/AppMenuItem" android:text="@string/menu_app_gpsalert" />
     <TextView android:id="@+id/appMiLinterna"
-        style="@style/AppMenuItem" android:text="MiLinterna (LightOn Noti)" />
+        style="@style/AppMenuItem" android:text="@string/menu_app_milinterna" />
     <TextView android:id="@+id/appPermission"
-        style="@style/AppMenuItem" android:text="Permission Inspector" />
+        style="@style/AppMenuItem" android:text="@string/menu_app_permission_inspector" />
 
     <View android:layout_width="match_parent" android:layout_height="16dp"/>
 </LinearLayout>

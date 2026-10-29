@@ -39,7 +39,7 @@ public class PhotoHandler implements PictureCallback {
         if (!pictureFileDir.exists() && !pictureFileDir.mkdirs()) {
 
            // Log.d(CamActivity.DEBUG_TAG, "Can't create directory to save image.");
-            Toast.makeText(context, "Can't create directory to save image.",
+            Toast.makeText(context, R.string.photo_dir_error,
                     Toast.LENGTH_LONG).show();
             return;
 
@@ -57,7 +57,7 @@ public class PhotoHandler implements PictureCallback {
             FileOutputStream fos = new FileOutputStream(pictureFile);
             fos.write(data);
             fos.close();
-            Toast.makeText(context, "New Image saved:" + photoFile,
+            Toast.makeText(context, context.getString(R.string.photo_saved, photoFile),
                     Toast.LENGTH_LONG).show();
             sharedpreferences = context.getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
             //String foto = filename;
@@ -70,7 +70,7 @@ public class PhotoHandler implements PictureCallback {
         } catch (Exception error) {
            // Log.d(CamActivity.DEBUG_TAG, "File" + filename + "not saved: "
              //       + error.getMessage());
-            Toast.makeText(context, "Image could not be saved.",
+            Toast.makeText(context, R.string.photo_save_error,
                     Toast.LENGTH_LONG).show();
         }
     }

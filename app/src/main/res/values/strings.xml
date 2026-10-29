@@ -15,4 +15,48 @@
     <string name="menu_our_apps">Nuestras Apps</string>
     <string name="shareapp">Compartir App</string>
     <string name="rateme">Calificar App</string>
+
+    <!-- Extracted from code/layouts 2026-10-29 (default text kept verbatim) -->
+    <string name="welcome_message">¡Gracias por instalar MiLupa!\n\nEsta aplicación se mantiene gracias a la publicidad que se mostrará. Agradecemos tu comprensión y apoyo.\n\nA continuación se solicitarán los permisos necesarios para usar la cámara.</string>
+    <string name="welcome_ok">Entendido</string>
+    <string name="notification_channel_name">MiLupa Notifications</string>
+    <string name="ok">OK</string>
+    <string name="light_on">Light On</string>
+    <string name="light_off">Light Off</string>
+    <string name="camera_permission_required">Camera permission is required to use this app</string>
+    <string name="camera_open_failed">Failed to open camera: %1$s</string>
+    <string name="photo_click">Click</string>
+    <string name="recording">Grabando...</string>
+    <string name="video_saved">Video guardado en Películas</string>
+    <string name="share_chooser_title">¡¡¡Compartir!!!</string>
+    <string name="email_subject">Desde MiLupa</string>
+    <string name="share_image_using">Share Image Using</string>
+    <string name="share_image">Share Image!</string>
+    <string name="photo_dir_error">Can\'t create directory to save image.</string>
+    <string name="photo_saved">New Image saved:%1$s</string>
+    <string name="photo_save_error">Image could not be saved.</string>
+    <string name="preview_start_failed">Failed to start preview: %1$s</string>
+    <string name="preview_cant_start">Can\'t start preview</string>
+    <string name="version_format" translatable="false">v%1$s</string>
+    <string name="version_placeholder" translatable="false">v</string>
+    <string name="chevron_right" translatable="false">›</string>
+    <string name="brand_griscal" translatable="false">Griscal</string>
+
+    <!-- Content descriptions (camera screen) -->
+    <string name="cd_menu">Menu</string>
+    <string name="cd_flash">Flash</string>
+    <string name="cd_zoom_in">Zoom In</string>
+    <string name="cd_photo">Foto</string>
+    <string name="cd_record_video">Grabar Video</string>
+    <string name="cd_zoom_out">Zoom Out</string>
+
+    <!-- "Our apps" menu -->
+    <string name="menu_app_carepal_pets">CarePal: Mascotas y Salud</string>
+    <string name="menu_app_carepal_cars">CarePal: Autos y Service</string>
+    <string name="menu_app_carepal_family">CarePal: Familia y Agenda</string>
+    <string name="menu_app_carepal_house">CarePal: Hogar y Mantenimiento</string>
+    <string name="menu_app_griscal">Griscal: Hogar y Familia</string>
+    <string name="menu_app_gpsalert">GPS Alert – Location Alarm</string>
+    <string name="menu_app_milinterna" translatable="false">MiLinterna (LightOn Noti)</string>
+    <string name="menu_app_permission_inspector" translatable="false">Permission Inspector</string>
 </resources>

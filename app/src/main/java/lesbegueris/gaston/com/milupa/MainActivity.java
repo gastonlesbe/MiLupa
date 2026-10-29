@@ -154,11 +154,8 @@ public class MainActivity extends AppCompatActivity {
     private void showWelcomeDialog() {
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.app_name));
-        builder.setMessage("¡Gracias por instalar MiLupa!\n\n" +
-                "Esta aplicación se mantiene gracias a la publicidad que se mostrará. " +
-                "Agradecemos tu comprensión y apoyo.\n\n" +
-                "A continuación se solicitarán los permisos necesarios para usar la cámara.");
-        builder.setPositiveButton("Entendido", (dialog, which) -> {
+        builder.setMessage(R.string.welcome_message);
+        builder.setPositiveButton(R.string.welcome_ok, (dialog, which) -> {
             SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
             prefs.edit().putBoolean(KEY_WELCOME_SHOWN, true).putBoolean(KEY_FIRST_LAUNCH, false).apply();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -177,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         // Create notification channel for Android 8.0+ (API 26+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelId = "milupa_notification_channel";
-            String channelName = "MiLupa Notifications";
+            String channelName = getString(R.string.notification_channel_name);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);

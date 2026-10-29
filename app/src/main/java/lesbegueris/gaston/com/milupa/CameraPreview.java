@@ -142,7 +142,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             if (mPreviewSizeList.size() > 0) { // prevent infinite loop
                 surfaceChanged(null, 0, width, height);
             } else {
-                Toast.makeText(mActivity, "Can't start preview", Toast.LENGTH_LONG).show();
+                Toast.makeText(mActivity, R.string.preview_cant_start, Toast.LENGTH_LONG).show();
                 Log.w(LOG_TAG, "Gave up starting preview");
             }
         }

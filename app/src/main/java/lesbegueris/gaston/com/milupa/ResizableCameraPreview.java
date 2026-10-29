@@ -59,7 +59,7 @@ public class ResizableCameraPreview extends CameraPreview {
         try {
             mCamera.startPreview();
         } catch (Exception e) {
-            Toast.makeText(mActivity, "Failed to start preview: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(mActivity, mActivity.getString(R.string.preview_start_failed, e.getMessage()), Toast.LENGTH_LONG).show();
             Log.w(LOG_TAG, "Failed to start preview: " + e.getMessage());
         }
     }
@@ -91,7 +91,7 @@ public class ResizableCameraPreview extends CameraPreview {
         try {
             mCamera.startPreview();
         } catch (Exception e) {
-            Toast.makeText(mActivity, "Failed to satart preview: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(mActivity, mActivity.getString(R.string.preview_start_failed, e.getMessage()), Toast.LENGTH_LONG).show();
         }
         mSurfaceConfiguring = false;
     }

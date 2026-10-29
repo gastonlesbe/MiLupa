@@ -278,7 +278,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
         dialog.setTitle(R.string.TocaPantallaFoto);
         dialog.setMessage(R.string.zoom);
 
-        dialog.setNegativeButton("OK",new DialogInterface.OnClickListener() {
+        dialog.setNegativeButton(R.string.ok,new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 //pass
             }
@@ -320,7 +320,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
         if (isFlash1) {
             if (!isOn1) {
                 iBtnFlash.setImageResource(R.drawable.ic_flash_on);
-                Toast.makeText(getApplicationContext(), "Light On", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.light_on, Toast.LENGTH_LONG).show();
                 mCamera.getParameters();
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
                 if (Build.VERSION.SDK_INT > 23) {
@@ -330,7 +330,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
                 isOn1 = true;
             } else {
                 iBtnFlash.setImageResource(R.drawable.ic_flash_off);
-                Toast.makeText(getApplicationContext(), "Light Off", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), R.string.light_off, Toast.LENGTH_LONG).show();
                 parameters = mCamera.getParameters();
                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
                 if (Build.VERSION.SDK_INT > 23) {
@@ -377,7 +377,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
                     initializeCamera();
                 } else {
                     // Permissions denied, show message and finish
-                    Toast.makeText(this, "Camera permission is required to use this app", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.camera_permission_required, Toast.LENGTH_LONG).show();
                     finish();
                 }
                 break;
@@ -398,7 +398,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
             } catch (Exception e) {
                 // Handle camera initialization failure
                 Log.e("CameraError", "Failed to initialize camera: " + e.getMessage());
-                Toast.makeText(this, "Failed to open camera: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.camera_open_failed, e.getMessage()), Toast.LENGTH_LONG).show();
                 finish(); // Or handle the error differently
                 return; // Exit early if camera failed to initialize
             }
@@ -553,7 +553,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
             sound.play(MediaActionSound.SHUTTER_CLICK);
             mCamera.setPreviewDisplay(mPreview.getHolder());
 
-            Toast t = Toast.makeText(this, "Click", Toast.LENGTH_SHORT);
+            Toast t = Toast.makeText(this, R.string.photo_click, Toast.LENGTH_SHORT);
             t.show();
             imageView.setVisibility(View.VISIBLE);
 
@@ -770,7 +770,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
             isRecording = true;
             videoOn = true;
             iBtnVideo.setImageResource(R.drawable.ic_stop);
-            Toast.makeText(this, "Grabando...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.recording, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Log.e("VideoError", "Error starting video: " + e.getMessage());
             releaseMediaRecorder();
@@ -793,7 +793,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
         mCamera.lock();
         mCamera.startPreview();
         safeToTakePicture = true;
-        Toast.makeText(this, "Video guardado en Películas", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.video_saved, Toast.LENGTH_SHORT).show();
     }
 
     private void releaseMediaRecorder() {
@@ -825,7 +825,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
 
         try {
             String v = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
-            ((TextView) view.findViewById(R.id.menuVersion)).setText("v" + v);
+            ((TextView) view.findViewById(R.id.menuVersion)).setText(getString(R.string.version_format, v));
         } catch (PackageManager.NameNotFoundException ignored) {}
 
         view.findViewById(R.id.menuContact).setOnClickListener(v -> { mandarEmail(); dialog.dismiss(); });
@@ -868,7 +868,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("text/plain");
         share.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=lesbegueris.gaston.com.milupa");
-        startActivity(Intent.createChooser(share, "¡¡¡Compartir!!!"));
+        startActivity(Intent.createChooser(share, getString(R.string.share_chooser_title)));
     }
 
     private void rateMe() {
@@ -880,7 +880,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("plain/text");
         intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"lesberweb@gmail.com"});
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Desde MiLupa");
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject));
         startActivity(Intent.createChooser(intent, ""));
     }
 
@@ -888,7 +888,7 @@ public class CamActivity extends Activity implements SurfaceHolder.Callback, Cam
         // Create notification channel for Android 8.0+ (API 26+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelId = "milupa_notification_channel";
-            String channelName = "MiLupa Notifications";
+            String channelName = getString(R.string.notification_channel_name);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
             NotificationManager notificationManager = getSystemService(NotificationManager.class);

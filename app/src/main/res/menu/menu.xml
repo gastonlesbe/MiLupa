@@ -9,14 +9,14 @@
         android:id="@+id/our_apps"
         android:title="@string/menu_our_apps">
         <menu>
-            <item android:id="@+id/app_carepal_pets"        android:title="CarePal: Mascotas y Salud" />
-            <item android:id="@+id/app_carepal_cars"        android:title="CarePal: Autos y Service" />
-            <item android:id="@+id/app_carepal_family"      android:title="CarePal: Familia y Agenda" />
-            <item android:id="@+id/app_carepal_house"       android:title="CarePal: Hogar y Mantenimiento" />
-            <item android:id="@+id/app_griscal"             android:title="Griscal: Hogar y Familia" />
-            <item android:id="@+id/app_gpsalert"            android:title="GPS Alert – Location Alarm" />
-            <item android:id="@+id/app_milinterna"          android:title="MiLinterna (LightOn Noti)" />
-            <item android:id="@+id/app_permission_inspector" android:title="Permission Inspector" />
+            <item android:id="@+id/app_carepal_pets"        android:title="@string/menu_app_carepal_pets" />
+            <item android:id="@+id/app_carepal_cars"        android:title="@string/menu_app_carepal_cars" />
+            <item android:id="@+id/app_carepal_family"      android:title="@string/menu_app_carepal_family" />
+            <item android:id="@+id/app_carepal_house"       android:title="@string/menu_app_carepal_house" />
+            <item android:id="@+id/app_griscal"             android:title="@string/menu_app_griscal" />
+            <item android:id="@+id/app_gpsalert"            android:title="@string/menu_app_gpsalert" />
+            <item android:id="@+id/app_milinterna"          android:title="@string/menu_app_milinterna" />
+            <item android:id="@+id/app_permission_inspector" android:title="@string/menu_app_permission_inspector" />
         </menu>
     </item>
 
@@ -31,6 +31,6 @@
     <item
         android:id="@+id/version"
         android:enabled="false"
-        android:title="v" />
+        android:title="@string/version_placeholder" />
 
 </menu>

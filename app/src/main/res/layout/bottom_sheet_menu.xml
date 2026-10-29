@@ -94,7 +94,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="›"
+            android:text="@string/chevron_right"
             android:textSize="20sp"
             android:textColor="#00C8F0" />
     </LinearLayout>
@@ -168,7 +168,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:text="v"
+            android:text="@string/version_placeholder"
             android:textSize="13sp"
             android:textColor="#4A7090" />
     </LinearLayout>
