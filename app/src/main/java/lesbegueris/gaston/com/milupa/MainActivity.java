@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lesbegueris.gaston.com.milupa.util.AppodealHelper;
-import lesbegueris.gaston.com.milupa.util.AdMobAppOpenHelper;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String PREFS_NAME = "MiLupaPrefs";
     private static final String KEY_FIRST_LAUNCH = "first_launch";
     private static final String KEY_WELCOME_SHOWN = "welcome_shown";
-    private static final String KEY_APP_OPEN_SHOWN = "app_open_shown";
     private boolean isNavigating = false;
 
     @Override
@@ -49,9 +47,6 @@ public class MainActivity extends AppCompatActivity {
         String appodealAppKey = getString(R.string.appodeal_app_key);
         AppodealHelper.initialize(this, appodealAppKey);
         AppodealHelper.showBanner(this, R.id.appodealBannerView);
-
-        // Load App Open Ad early
-        AdMobAppOpenHelper.loadAppOpenAd(this);
 
         btnGoCamera= (ImageButton)findViewById(R.id.btnGoCamera);
         btnGoCamera.setOnClickListener(new View.OnClickListener() {
@@ -89,19 +84,9 @@ public class MainActivity extends AppCompatActivity {
         if (isNavigating) {
             return;
         }
-        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        boolean shouldShowAppOpen = !prefs.getBoolean(KEY_APP_OPEN_SHOWN, false);
-        if (shouldShowAppOpen) {
-            prefs.edit().putBoolean(KEY_APP_OPEN_SHOWN, true).apply();
-            AdMobAppOpenHelper.showAppOpenAd(this, new Runnable() {
-                @Override
-                public void run() {
-                    goToCamera();
-                }
-            });
-        } else {
-            goToCamera();
-        }
+        // No full-screen App Open ad: the store listing promises discreet ads, and a
+        // full-screen ad on first launch hurts retention (and Play visibility with it).
+        goToCamera();
     }
 
     private void goToCamera() {

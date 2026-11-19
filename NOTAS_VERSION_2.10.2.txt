@@ -1,0 +1,32 @@
+<es-419>
+- La lupa abre directo, sin anuncios a pantalla completa al inicio
+- Mejoras de estabilidad
+</es-419>
+<en-AU>
+- The magnifier opens straight away, with no full-screen ad at launch
+- Stability improvements
+</en-AU>
+<en-GB>
+- The magnifier opens straight away, with no full-screen ad at launch
+- Stability improvements
+</en-GB>
+<en-US>
+- The magnifier opens straight away, with no full-screen ad at launch
+- Stability improvements
+</en-US>
+<es-ES>
+- La lupa se abre directamente, sin anuncios a pantalla completa al inicio
+- Mejoras de estabilidad
+</es-ES>
+<es-US>
+- La lupa abre directo, sin anuncios a pantalla completa al inicio
+- Mejoras de estabilidad
+</es-US>
+<pt-BR>
+- A lupa abre direto, sem anúncios em tela cheia ao iniciar
+- Melhorias de estabilidade
+</pt-BR>
+<pt-PT>
+- A lupa abre diretamente, sem anúncios em ecrã inteiro ao iniciar
+- Melhorias de estabilidade
+</pt-PT>
