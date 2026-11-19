@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     >
+    <!-- Implied by screenOrientation (app + ad SDK activities) and ACCESS_WIFI_STATE (ad SDKs); not required to run -->
+    <uses-feature android:name="android.hardware.screen.portrait" android:required="false" />
+    <uses-feature android:name="android.hardware.screen.landscape" android:required="false" />
+    <uses-feature android:name="android.hardware.wifi" android:required="false" />
+    <!-- RECORD_AUDIO is only for video recording; devices without a microphone can still use the app -->
+    <uses-feature android:name="android.hardware.microphone" android:required="false" />
+
 
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
